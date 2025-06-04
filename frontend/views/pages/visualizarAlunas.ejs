@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lista de Alunas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    h1 {
+      color: #333;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: white;
+      padding: 15px;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      text-align: center;
+      cursor: pointer;
+    }
+    .card:hover {
+      background-color: #f8f8f8;
+    }
+    .card img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    a {
+      display: inline-block;
+      margin-bottom: 20px;
+      background-color: #007bff;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 4px;
+      text-decoration: none;
+    }
+    a:hover {
+      background-color: #0056b3;
+    }
+    .no-data {
+      color: #666;
+      text-align: center;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <h1>Lista de Alunas</h1>
+  <a href="/adicionarAlunas">Adicionar Nova Aluna</a>
+
+  <div id="alunasContainer">
+    <p class="no-data">Carregando alunas...</p>
+  </div>
+
+  <script>
+    // Função para criar um card de aluna
+    function criarCard(aluna) {
+      const card = document.createElement('div');
+      card.className = 'card';
+
+      const img = document.createElement('img');
+      img.src = aluna.imagem_url || 'https://via.placeholder.com/100';
+      img.alt = aluna.nome_exibicao || aluna.nome;
+
+      const nome = document.createElement('h2');
+      nome.textContent = aluna.nome_exibicao || aluna.nome;
+
+      const info = document.createElement('p');
+      info.textContent = `${aluna.curso || 'Não informado'} - ${aluna.semestre || 'Não informado'}`;
+
+      card.appendChild(img);
+      card.appendChild(nome);
+      card.appendChild(info);
+
+      return card;
+    }
+
+    // Função para buscar as alunas e renderizar
+    async function carregarAlunas() {
+      const container = document.getElementById('alunasContainer');
+      container.innerHTML = ''; // Limpa o container antes de adicionar conteúdo
+
+      try {
+        const response = await fetch('/alunas');
+        if (!response.ok) {
+          throw new Error(`Erro ao buscar alunas: ${response.status} ${response.statusText}`);
+        }
+
+        const alunas = await response.json();
+
+        if (!alunas.length) {
+          container.innerHTML = '<p class="no-data">Nenhuma aluna cadastrada ainda.</p>';
+          return;
+        }
+
+        const grid = document.createElement('div');
+        grid.className = 'grid';
+
+        alunas.forEach(aluna => {
+          grid.appendChild(criarCard(aluna));
+        });
+
+        container.appendChild(grid);
+
+      } catch (error) {
+        container.innerHTML = `<p class="no-data">Erro ao carregar alunas: ${error.message}</p>`;
+      }
+    }
+
+    carregarAlunas();
+  </script>
+</body>
+</html>
