@@ -109,42 +109,49 @@ class AlunasController {
     }
   }
 
-  async update(req, res) {
-    try {
-      const id = parseInt(req.params.id);
-      const { nome, nome_exibicao, email, bio, curso, semestre, frase_pessoal } = req.body;
-      const imagem_url = req.file ? `/uploads/${req.file.filename}` : null;
+ async update(req, res) {
+  try {
+    const id = parseInt(req.params.id);
+    if (isNaN(id)) {
+      return res.status(400).json({ success: false, error: 'ID inválido' });
+    }
 
-      const updates = {
-        nome_aluna: nome?.trim(),
-        nome_exibicao: nome_exibicao?.trim(),
-        email: email?.toLowerCase().trim(),
-        bio: bio?.trim(),
-        curso: curso?.trim(),
-        semestre: semestre?.trim(),
-        imagem_url,
-        frase_pessoal: frase_pessoal?.trim(),
-      };
+    const { nome, nome_exibicao, email, bio, curso, semestre, frase_pessoal } = req.body;
+    const imagem_url = req.file ? `/uploads/${req.file.filename}` : null;
 
-      const updatedAluna = await AlunasModel.update(id, updates);
-      if (!updatedAluna) {
-        return res.status(404).json({
-          success: false,
-          error: 'Aluna não encontrada',
-        });
-      }
-      res.json({
-        success: true,
-        data: updatedAluna,
-        message: 'Aluna atualizada com sucesso',
-      });
-    } catch (error) {
-      res.status(500).json({
+    const updates = {
+      nome_aluna: nome?.trim(),
+      nome_exibicao: nome_exibicao?.trim(),
+      email: email?.toLowerCase().trim(),
+      bio: bio?.trim(),
+      curso: curso?.trim(),
+      semestre: semestre?.trim(),
+      frase_pessoal: frase_pessoal?.trim(),
+    };
+
+    if (imagem_url) {
+      updates.imagem_url = imagem_url;
+    }
+
+    const updatedAluna = await AlunasModel.update(id, updates);
+    if (!updatedAluna) {
+      return res.status(404).json({
         success: false,
-        error: error.message || 'Erro interno do servidor',
+        error: 'Aluna não encontrada',
       });
     }
+    res.json({
+      success: true,
+      data: updatedAluna,
+      message: 'Aluna atualizada com sucesso',
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Erro interno do servidor',
+    });
   }
+}
 
   async delete(req, res) {
     try {

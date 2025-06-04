@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,17 +8,16 @@
   <style>
     :root {
       --primary-color: #6a0dad;
-      /* Um roxo mais vibrante */
       --secondary-color: #4C0D38;
-      /* Um roxo mais claro */
       --accent-color: #ff69b4;
-      /* Rosa choque para detalhes */
       --text-dark: #333;
       --text-light: #f4f4f4;
       --bg-light: #fcf2f3;
       --card-bg: #ffffff;
       --shadow-light: rgba(0, 0, 0, 0.1);
       --shadow-medium: rgba(0, 0, 0, 0.2);
+      --modal-header-bg: #4C0D38;
+      --modal-button-bg: #ff69b4;
     }
 
     body {
@@ -43,16 +41,23 @@
 
     header img {
       height: 50px;
-      /* Tamanho ajustado para o logo */
       margin-right: 15px;
     }
 
     h1 {
       color: #4C0D38;
       text-align: center;
-      margin: 40px 0 30px;
+      margin: 40px 0 10px;
       font-size: 2.5em;
       font-weight: 600;
+    }
+
+    .subtitulo {
+      text-align: center;
+      font-size: 1.2em;
+      margin-bottom: 30px;
+      color: var(--secondary-color);
+      font-weight: 500;
     }
 
     .container {
@@ -62,29 +67,37 @@
     }
 
     .add-button {
-      display: inline-block;
-      margin-bottom: 30px;
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
       background-color: var(--accent-color);
       color: var(--text-light);
-      padding: 12px 25px;
-      border-radius: 8px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       text-decoration: none;
+      font-size: 2em;
       font-weight: 600;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-      box-shadow: 0 3px 8px var(--shadow-light);
+      transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+      box-shadow: 0 5px 15px var(--shadow-medium);
+      z-index: 1000;
     }
 
     .add-button:hover {
       background-color: #e04b9c;
-      /* Um rosa um pouco mais escuro no hover */
-      transform: translateY(-2px);
+      transform: scale(1.1);
+      box-shadow: 0 8px 20px var(--shadow-medium);
     }
 
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 25px;
-      padding-bottom: 50px;
+      padding-bottom: 80px;
+      justify-items: center;
     }
 
     .card {
@@ -99,25 +112,12 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      max-width: 220px;
     }
 
     .card:hover {
       transform: translateY(-5px);
       box-shadow: 0 8px 20px var(--shadow-medium);
-    }
-
-    .card img {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid var(--secondary-color);
-      margin-bottom: 15px;
-      transition: border-color 0.3s ease;
-    }
-
-    .card:hover img {
-      border-color: var(--accent-color);
     }
 
     .card h2 {
@@ -140,59 +140,170 @@
       padding: 50px 0;
       font-size: 1.2em;
     }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: var(--modal-header-bg);
+      padding: 0;
+      border-radius: 12px;
+      width: 600px;
+      max-width: 90%;
+      box-shadow: 0 5px 20px var(--shadow-medium);
+      position: relative;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .modal-header {
+      background: var(--modal-header-bg);
+      color: var(--text-light);
+      padding: 20px 25px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 12px 12px 0 0;
+    }
+
+    .modal-header h2 {
+      font-size: 1.8em;
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .modal-header p {
+      font-size: 1em;
+      margin: 0;
+      opacity: 0.8;
+    }
+
+    .modal-body {
+      padding: 25px;
+      background: var(--card-bg);
+      border-radius: 0 0 12px 12px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-body .info {
+      flex: 1;
+      margin-left: 0;
+    }
+
+    .modal-body .info p {
+      font-size: 1em;
+      margin: 12px 0;
+      color: var(--text-dark);
+    }
+
+    .modal-body .info p strong {
+      color: #300129;
+    }
+
+    .modal-content .close-button {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 2em;
+      color: var(--text-light);
+      cursor: pointer;
+      transition: color 0.3s ease, transform 0.2s ease;
+    }
+
+    .modal-content .close-button:hover {
+      color: #ffd700;
+      transform: scale(1.1);
+    }
   </style>
 </head>
-
 <body>
   <header>
     <img src="/frontend/views/assets/logoGrace.png" alt="Logo Borboleta" />
   </header>
-
   <div class="container">
     <h1>Grace Hopper</h1>
-
-    <p>A potência do Grace está em quem faz parte dele!</p>
-    <a href="/adicionarAlunas" class="add-button">Adicionar Nova Aluna</a>
-
-
-
+    <p class="subtitulo">A potência do Grace está em quem faz parte dele!</p>
+    <a href="/adicionarAlunas" class="add-button">+</a>
     <div id="alunasContainer">
       <p class="no-data">Carregando alunas...</p>
     </div>
   </div>
-
+  <div id="studentModal" class="modal">
+    <div class="modal-content">
+      <button class="close-button">&times;</button>
+      <div class="modal-header">
+        <div>
+          <h2 id="modalName"></h2>
+          <p id="modalCurso"></p>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="info">
+          <p><strong>Nome Completo:</strong> <span id="modalFullName"></span></p>
+          <p><strong>Bio:</strong> <span id="modalBiografia"></span></p>
+          <p><strong>Email:</strong> <span id="modalEmail"></span></p>
+        </div>
+      </div>
+    </div>
+  </div>
   <script>
-    // Função para criar um card de aluna
     function criarCard(aluna) {
       const card = document.createElement('div');
       card.className = 'card';
-
-      const img = document.createElement('img');
-      img.src = aluna.imagem_url || 'https://via.placeholder.com/120/9370db/ffffff?text=Aluna'; // Melhor placeholder
-      img.alt = aluna.nome_exibicao || aluna.nome;
-
+      card.dataset.aluna = JSON.stringify(aluna);
       const nome = document.createElement('h2');
       nome.textContent = aluna.nome_exibicao || aluna.nome || 'Nome Não Informado';
-
       const info = document.createElement('p');
       info.textContent = `${aluna.curso || 'Curso Não Informado'} - ${aluna.semestre || 'Semestre Não Informado'}`;
-
-      const bio = document.createElement('p');
-      bio.textContent = `${aluna.biografia || 'biografia Não informada'} - ${aluna.semestre || 'Semestre Não informada'}`;
-      bio.textContent = `${aluna.biografia || 'biografia Não informada'} - ${aluna.semestre || 'Semestre Não informada'}`;
-
-      card.appendChild(img);
       card.appendChild(nome);
       card.appendChild(info);
-
+      card.addEventListener('click', () => openModal(aluna));
       return card;
     }
 
-    // Função para buscar as alunas e renderizar
+    function openModal(aluna) {
+      console.log(aluna);
+      const modal = document.getElementById('studentModal');
+      const modalName = document.getElementById('modalName');
+      const modalCurso = document.getElementById('modalCurso');
+      const modalFullName = document.getElementById('modalFullName');
+      const modalBiografia = document.getElementById('modalBiografia');
+      const modalEmail = document.getElementById('modalEmail');
+
+      modalName.textContent = aluna.nome_exibicao || aluna.nome || 'Sem nome';
+      modalCurso.textContent = aluna.curso || 'Curso não informado';
+      modalFullName.textContent = aluna.nome_aluna || 'Nome completo não informado';
+      modalBiografia.textContent = aluna.bio || 'Sem biografia';
+      modalEmail.textContent = aluna?.email || 'Sem e-mail';
+
+      modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('studentModal');
+      if (modal) {
+        modal.style.display = 'none';
+      }
+    }
+
     async function carregarAlunas() {
       const container = document.getElementById('alunasContainer');
-      container.innerHTML = ''; // Limpa o container antes de adicionar conteúdo
-
+      container.innerHTML = '';
       try {
         const response = await fetch('/alunas');
         if (!response.ok) {
@@ -200,29 +311,32 @@
         }
         const alunas = await response.json();
         console.log('Dados recebidos:', alunas);
-
-        if (!alunas.data || !alunas.data.length) { // Verifica alunas.data.length
+        if (!alunas.data || !alunas.data.length) {
           container.innerHTML = '<p class="no-data">Nenhuma aluna cadastrada ainda.</p>';
           return;
         }
-
         const grid = document.createElement('div');
         grid.className = 'grid';
-
         alunas.data.forEach(aluna => {
           grid.appendChild(criarCard(aluna));
         });
-
         container.appendChild(grid);
-
       } catch (error) {
         console.error('Erro:', error);
         container.innerHTML = `<p class="no-data">Erro ao carregar alunas: ${error.message}. Tente novamente mais tarde.</p>`;
       }
     }
 
+    // Event listeners
+    document.getElementById('studentModal').addEventListener('click', (event) => {
+      if (event.target === document.getElementById('studentModal')) {
+        closeModal();
+      }
+    });
+
+    document.querySelector('.close-button').addEventListener('click', closeModal);
+
     carregarAlunas();
   </script>
 </body>
-
 </html>
