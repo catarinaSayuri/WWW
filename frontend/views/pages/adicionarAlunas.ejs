@@ -137,7 +137,7 @@
     input,
     textarea,
     select {
-      border: 1.5px solid #f4c3da;
+      border: 2px solid #E08595;
       padding: 10px;
       border-radius: 6px;
       width: 100%;
@@ -495,6 +495,7 @@
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+
           },
           body: JSON.stringify(alunaData)
         });
@@ -583,7 +584,6 @@
           console.log('Valor de email:', formData.get('email'));
           console.log('Valor de bio:', formData.get('bio'));
           console.log('Valor de frase_pessoal:', formData.get('frase_pessoal')); // Para verificar este também
-
           const emailPrincipal = formData.get('email');
           console.log("Email principal coletado:", emailPrincipal);
           try {
@@ -658,6 +658,8 @@
             alert('Perfil salvo com sucesso!');
             form.reset();
             updateSubmitButton();
+
+            window.location.href = './visualizarAlunas.ejs';
 
           } catch (error) {
             alert('Erro ao salvar perfil: ' + error.message);

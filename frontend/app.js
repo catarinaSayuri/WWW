@@ -1,5 +1,4 @@
 require('dotenv').config(); // Deve ser a primeira linha
-console.log('[DEBUG] Senha carregada:', process.env.DB_PASSWORD);
 
 const express = require('express');
 const path = require('path');

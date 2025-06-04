@@ -28,12 +28,26 @@ const upload = multer({
 
 class AlunasController {
   async create(req, res) {
+     // --- ADICIONE ESTES LOGS ---
+    console.log('--- DEBUG: AlunasController.create - NOVO TESTE ---');
+    console.log('req.body recebido:', req.body); // O que o frontend enviou no corpo da requisição
+    console.log('req.file recebido:', req.file); // Se há um arquivo anexado
+    const { nome, nome_exibicao, email, bio, curso, semestre, frase_pessoal } = req.body;
+    console.log('Valor de `nome` (desestruturado):', nome, 'Tipo:', typeof nome);
+    console.log('Valor de `nome_exibicao` (desestruturado):', nome_exibicao, 'Tipo:', typeof nome_exibicao);
+    console.log('Valor de `email` (desestruturado):', email, 'Tipo:', typeof email);
+    console.log('Valor de `bio` (desestruturado):', bio, 'Tipo:', typeof bio);
+    console.log('Valor de `curso` (desestruturado):', curso, 'Tipo:', typeof curso);
+    console.log('Valor de `semestre` (desestruturado):', semestre, 'Tipo:', typeof semestre);
+    console.log('Valor de `frase_pessoal` (desestruturado):', frase_pessoal, 'Tipo:', typeof frase_pessoal);
+    console.log('----------------------------------------------------');
+    // --- FIM DOS LOGS ---
     try {
-      const { nome, nome_exibicao, email, bio, curso, semestre, frase_pessoal } = req.body;
+      const { nome_aluna, nome_exibicao, email, bio, curso, semestre, frase_pessoal } = req.body;
       const imagem_url = req.file ? `/uploads/${req.file.filename}` : null;
 
       const novaAluna = await AlunasModel.create({
-        nome_aluna: nome?.trim(),
+        nome_aluna: nome_aluna?.trim(),
         nome_exibicao: nome_exibicao?.trim(),
         email: email?.toLowerCase().trim(),
         bio: bio?.trim(),
